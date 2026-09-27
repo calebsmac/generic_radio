@@ -272,7 +272,7 @@ namespace Nos3
 
     int32_t Generic_radioHardwareModel::udp_init(udp_info_t* sock)
     {
-        int status;
+        int status = 0;
         int optval;
         socklen_t optlen;
 
