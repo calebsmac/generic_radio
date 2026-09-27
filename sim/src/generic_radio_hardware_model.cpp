@@ -1,3 +1,4 @@
+#include <cstring>
 #include <generic_radio_hardware_model.hpp>
 
 namespace Nos3
@@ -247,7 +248,11 @@ namespace Nos3
 
         for (p = res; p != NULL; p = p->ai_next)
         {
-            struct sockaddr_in *ipv4 = (struct sockaddr_in *)p->ai_addr;
+            // Copy rather than cast: ai_addr is only byte-aligned, which clang on arm64
+            // rejects under -Wcast-align.
+            struct sockaddr_in ipv4_copy;
+            memcpy(&ipv4_copy, p->ai_addr, sizeof ipv4_copy);
+            struct sockaddr_in *ipv4 = &ipv4_copy;
             addr = &(ipv4->sin_addr);
 
             // Convert IP to String
